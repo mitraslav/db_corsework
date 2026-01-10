@@ -3,9 +3,9 @@ from __future__ import annotations
 from typing import Iterable
 
 from src.config import load_config
+from src.db_manager import DBManager, VacancyView
 from src.db_setup import create_database, create_tables
 from src.loader import EmployerSeed, load_hh_data_to_db
-from src.db_manager import DBManager, VacancyView
 
 
 def format_salary(v: VacancyView) -> str:

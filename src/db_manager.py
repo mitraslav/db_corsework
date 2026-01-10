@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import List, Optional, Tuple
+
 import psycopg2
 
 from .config import PostgresConfig
@@ -10,6 +11,7 @@ from .config import PostgresConfig
 @dataclass(frozen=True)
 class VacancyView:
     """Человекочитаемое представление вакансии для вывода в интерфейсе."""
+
     company_name: str
     vacancy_title: str
     salary_from: Optional[int]

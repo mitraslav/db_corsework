@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, Iterable, Optional, Tuple, List
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 import psycopg2
 from psycopg2.extras import execute_values
@@ -14,6 +14,7 @@ from .hh_api import HeadHunterAPI
 @dataclass(frozen=True)
 class EmployerSeed:
     """Описание выбранного работодателя: его hh_id и необязательная пометка."""
+
     hh_id: int
     note: str = ""
 
