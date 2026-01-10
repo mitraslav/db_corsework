@@ -3,39 +3,50 @@ from __future__ import annotations
 from typing import Any, Dict, List, Optional
 import requests
 
+
 class HeadHunterAPI:
+    """Клиент для публичного API HeadHunter (hh.ru)."""
 
     BASE_URL = "https://api.hh.ru"
 
     def __init__(self, user_agent: str = "hh-postgres-project/1.0") -> None:
+        """Создает HTTP-сессию и настраивает заголовок User-Agent."""
         self._session = requests.Session()
         self._session.headers.update({"User-Agent": user_agent})
 
     def get_employer(self, employer_id: int) -> Dict[str, Any]:
-        """Получает данные работника по его ID"""
+        """Возвращает данные работодателя по его идентификатору в hh.ru."""
         url = f"{self.BASE_URL}/employers/{employer_id}"
         resp = self._session.get(url, timeout=30)
         resp.raise_for_status()
         return resp.json()
 
     def search_employers(self, text: str, per_page: int = 20) -> List[Dict[str, Any]]:
-        """Ищет работников"""
+        """
+        Ищет работодателей по текстовому запросу.
+
+        Удобно для того, чтобы найти employer_id компании по названию.
+        """
         url = f"{self.BASE_URL}/employers"
         params = {"text": text, "per_page": per_page}
         resp = self._session.get(url, params=params, timeout=30)
         resp.raise_for_status()
         data = resp.json()
-        return data.get("itmems", [])
+        return data.get("items", [])
 
     def get_vacancies_by_employer(
-            self,
-            employer_id: int,
-            per_page: int = 100,
-            max_pages: int = 20,
-            area: Optional[int] = None,
-            only_with_salary: bool = False
+        self,
+        employer_id: int,
+        per_page: int = 100,
+        max_pages: int = 20,
+        area: Optional[int] = None,
+        only_with_salary: bool = False,
     ) -> List[Dict[str, Any]]:
-        """"""
+        """
+        Возвращает список вакансий конкретного работодателя с пагинацией.
+
+        max_pages — ограничитель, чтобы случайно не уйти в очень длинный сбор.
+        """
         url = f"{self.BASE_URL}/vacancies"
         all_items: List[Dict[str, Any]] = []
 
@@ -43,7 +54,7 @@ class HeadHunterAPI:
             params: Dict[str, Any] = {
                 "employer_id": employer_id,
                 "per_page": per_page,
-                "page": page
+                "page": page,
             }
             if area is not None:
                 params["area"] = area
